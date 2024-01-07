@@ -413,7 +413,20 @@
 			}
 		}
 	
-		// Event handlers for navigation buttons
+		// Event handler for full window click
+		$(window).on('click', function(event) {
+			var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+	
+			if (event.clientX < width / 2) {
+				// Clicked on the left side
+				navigateArticle(-1); // Navigate to the previous section
+			} else {
+				// Clicked on the right side
+				navigateArticle(1); // Navigate to the next section
+			}
+		});
+	
+		// Event handlers for existing navigation buttons
 		$('.nav-right').on('click', function() {
 			navigateArticle(1); // Navigate to the next article
 		});

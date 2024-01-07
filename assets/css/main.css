@@ -106,12 +106,12 @@ article {
 
 .nav-left, .nav-right {
     position: fixed;
-    top: 50%;
+    top: 500px;
     transform: translateY(-50%);
     background-color: rgb(24, 24, 24); /* Set the background color */
     color: white; /* Set text color */
     border: none; /* Remove default border */
-    border-radius: 100%; /* Make the button circular */
+    border-radius: 25%; /* Make the button circular */
     width: 40px; /* Set the width */
     height: 40px; /* Set the height */
     text-align: center; /* Center the text/icon inside the button */
