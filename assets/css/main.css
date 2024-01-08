@@ -106,7 +106,7 @@ article {
 
 .nav-left, .nav-right {
     position: fixed;
-    top: 500px;
+    top: 50%;
     transform: translateY(-50%);
     background-color: rgb(24, 24, 24); /* Set the background color */
     color: white; /* Set text color */
