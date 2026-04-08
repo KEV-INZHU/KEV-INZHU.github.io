@@ -29,6 +29,11 @@ article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;}
 
+#code-rain {
+    opacity: 1;       /* Lower = more subtle */
+    mix-blend-mode: screen;
+}
+
 body {
 	line-height: 1;
 }
@@ -1716,3 +1721,223 @@ article {
 		body.is-preload #footer {
 			opacity: 0;
 		}
+		/* ============================================
+   FILE EXPLORER WINDOW
+   ============================================ */
+
+.open-explorer-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #0f0;
+    color: #000;
+    border: 2px solid #0f0;
+    box-shadow: 0 0 20px #0f0, 0 0 40px rgba(0,255,0,0.3);
+    font-size: 28px;
+    cursor: pointer;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.open-explorer-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 30px #0f0, 0 0 60px #0f0;
+    background: #000;
+    color: #0f0;
+}
+
+/* Main Window */
+.explorer-window {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 480px;
+    min-width: 320px;
+    background: #0a0a14;
+    border: 2px solid #0f0;
+    box-shadow: 0 0 40px rgba(0, 255, 0, 0.3), inset 0 0 10px rgba(0,255,0,0.1);
+    border-radius: 12px;
+    z-index: 2000;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    color: #0f0;
+    backdrop-filter: blur(12px);
+    overflow: hidden;
+    resize: both;
+    min-height: 300px;
+    user-select: none;
+}
+
+/* Header (draggable area) */
+.explorer-header {
+    padding: 12px 16px;
+    background: rgba(0, 30, 0, 0.8);
+    border-bottom: 1px solid #0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: grab;
+    border-radius: 10px 10px 0 0;
+}
+
+.explorer-header:active {
+    cursor: grabbing;
+}
+
+.explorer-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.explorer-icon {
+    font-size: 18px;
+}
+
+.explorer-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.explorer-btn {
+    background: transparent;
+    border: 1px solid #0f0;
+    color: #0f0;
+    width: 26px;
+    height: 26px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.1s;
+}
+
+.explorer-btn:hover {
+    background: #0f0;
+    color: #000;
+}
+
+/* Toolbar */
+.explorer-toolbar {
+    padding: 8px 16px;
+    background: rgba(0, 20, 0, 0.5);
+    border-bottom: 1px solid rgba(0, 255, 0, 0.3);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+}
+
+/* Content area */
+.explorer-content {
+    padding: 12px;
+    max-height: 400px;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+/* Custom scrollbar */
+.explorer-content::-webkit-scrollbar {
+    width: 8px;
+}
+.explorer-content::-webkit-scrollbar-track {
+    background: #0a0a14;
+}
+.explorer-content::-webkit-scrollbar-thumb {
+    background: #0f0;
+    border-radius: 4px;
+}
+
+/* File item */
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    margin: 4px 0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid transparent;
+}
+
+.file-item:hover {
+    background: rgba(0, 255, 0, 0.1);
+    border-color: rgba(0, 255, 0, 0.3);
+    transform: translateX(4px);
+}
+
+.file-item.selected {
+    background: rgba(0, 255, 0, 0.2);
+    border-color: #0f0;
+}
+
+.file-icon {
+    font-size: 20px;
+    width: 24px;
+    text-align: center;
+}
+
+.file-name {
+    flex: 1;
+    font-weight: 500;
+}
+
+.file-meta {
+    font-size: 11px;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Status bar */
+.explorer-statusbar {
+    padding: 6px 16px;
+    background: rgba(0, 20, 0, 0.5);
+    border-top: 1px solid rgba(0, 255, 0, 0.3);
+    font-size: 11px;
+    color: #8f8;
+}
+
+/* Minimized state */
+.explorer-window.minimized {
+    height: auto !important;
+    width: 200px !important;
+    bottom: 100px;
+    right: 30px;
+    top: auto;
+    left: auto;
+    transform: none;
+}
+
+.explorer-window.minimized .explorer-content,
+.explorer-window.minimized .explorer-toolbar,
+.explorer-window.minimized .explorer-statusbar {
+    display: none;
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+    .explorer-window {
+        width: 90vw;
+        left: 5vw;
+        transform: translate(0, -50%);
+    }
+    .open-explorer-btn {
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+    }
+}
