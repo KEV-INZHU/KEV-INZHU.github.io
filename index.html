@@ -9,16 +9,28 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Your existing CSS (we'll add OS styles below) -->
     <link rel="stylesheet" href="assets/css/main.css">
     <style>
-        /* Matrix OS Styles – Add these to your main.css later, but inline for now */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-		
+        .desktop-icons {
+    position: absolute;
+    top: 20px;
+    left: 10px;
+    width: 90px; /* slightly less than ICON_COLUMN_WIDTH */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    pointer-events: none;
+}
+.desktop-icon {
+    width: 80px;
+    pointer-events: auto;
+    /* rest unchanged */
+}
         body {
             font-family: 'JetBrains Mono', monospace;
             background: #000;
@@ -27,13 +39,12 @@
             height: 100vh;
             user-select: none;
         }
-        /* Desktop area */
         #desktop {
             position: relative;
             width: 100%;
             height: 100vh;
             z-index: 5;
-            pointer-events: none; /* allow click-through to icons only */
+            pointer-events: none;
         }
         .desktop-icons {
             position: absolute;
@@ -75,37 +86,70 @@
             text-align: center;
             text-shadow: 0 0 5px #0f0;
         }
-        /* Windows */
         .os-window {
-			position: absolute;
-			width: 500px;
-			min-width: 300px;
-			background: #0a0a0a;
-			border: 2px solid #0f0;
-			box-shadow: 0 0 30px rgba(0,255,0,0.4), inset 0 0 20px rgba(0,255,0,0.1);
-			border-radius: 8px;
-			z-index: 100;
-			display: none;
-			resize: both;
-			overflow: hidden;        /* Changed from auto to hidden so resize handle works nicely */
-			min-height: 250px;
-			color: #0f0;
-			backdrop-filter: blur(5px);
-			display: flex;
-			flex-direction: column;
-		}
-		.window-header {
-			padding: 10px 15px;
-			background: #0f0;
-			color: #000;
-			font-weight: bold;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			cursor: grab;
-			border-radius: 6px 6px 0 0;
-			flex-shrink: 0;
-		}
+            position: absolute;
+            width: 500px;
+            min-width: 300px;
+            background: #0a0a0a;
+            border: 2px solid #0f0;
+            box-shadow: 0 0 30px rgba(0,255,0,0.4), inset 0 0 20px rgba(0,255,0,0.1);
+            border-radius: 8px;
+            z-index: 100;
+            display: none;
+            resize: both;
+            overflow: hidden;
+            min-height: 250px;
+            color: #0f0;
+            backdrop-filter: blur(5px);
+            flex-direction: column;
+            transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.4, 1), opacity 0.25s ease-out;
+            transform: scale(1);
+            opacity: 1;
+        }
+        .os-window.window-opening {
+    animation: windowOpen 0.25s ease-out;
+}
+
+@keyframes windowOpen {
+    0% {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+        .os-window.window-closing {
+    animation: windowClose 0.3s ease-in forwards;
+    pointer-events: none; /* prevent interaction during close */
+}
+@keyframes windowClose {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    30% {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+}
+        .window-header {
+            padding: 10px 15px;
+            background: #0f0;
+            color: #000;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: grab;
+            border-radius: 6px 6px 0 0;
+            flex-shrink: 0;
+        }
         .window-header:active {
             cursor: grabbing;
         }
@@ -130,12 +174,10 @@
             color: #000;
         }
         .window-content {
-			padding: 20px;
-			overflow-y: auto;         /* Scroll only if content exceeds */
-			flex: 1;                  /* Take remaining height */
-			max-height: none;         /* Remove max-height restriction */
-		}
-        /* Taskbar */
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
         #taskbar {
             position: fixed;
             bottom: 0;
@@ -166,7 +208,6 @@
             color: #0f0;
             font-size: 14px;
         }
-        /* Start Menu */
         #start-menu {
             position: fixed;
             bottom: 40px;
@@ -191,9 +232,11 @@
             background: #0f0;
             color: #000;
         }
-        /* Matrix rain and explosion canvases already present */
-        #code-rain, #explosion-canvas {
+        #code-rain, #explosion-canvas, #zeppeli-canvas {
             z-index: 1;
+        }
+        #zeppeli-canvas {
+            z-index: 4;
         }
         #desktop {
             z-index: 5;
@@ -201,139 +244,140 @@
         .os-window {
             z-index: 200;
         }
-		/* Custom Confirm Dialog */
-		.confirm-dialog {
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			background: rgba(0,0,0,0.7);
-			backdrop-filter: blur(3px);
-			z-index: 5000;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-		}
-		.confirm-content {
-			background: #0a0a0a;
-			border: 2px solid #0f0;
-			box-shadow: 0 0 40px #0f0;
-			width: 350px;
-			padding: 20px;
-			border-radius: 8px;
-		}
-		.confirm-header {
-			color: #0f0;
-			font-weight: bold;
-			margin-bottom: 15px;
-			text-shadow: 0 0 8px #0f0;
-		}
-		.confirm-body {
-			color: #0f0;
-			margin-bottom: 25px;
-			font-size: 14px;
-		}
-		.confirm-buttons {
-			display: flex;
-			gap: 15px;
-			justify-content: flex-end;
-		}
-		.confirm-btn {
-			background: transparent;
-			border: 1px solid #0f0;
-			color: #0f0;
-			padding: 6px 20px;
-			font-family: 'JetBrains Mono', monospace;
-			font-weight: bold;
-			cursor: pointer;
-			transition: all 0.1s;
-		}
-		.confirm-btn:hover {
-			background: #0f0;
-			color: #000;
-			box-shadow: 0 0 15px #0f0;
-		}
-
-		/* Shutdown Screen */
-		.shutdown-screen {
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			background: #000;
-			z-index: 9999;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			font-family: 'JetBrains Mono', monospace;
-		}
-		.shutdown-content {
-			text-align: center;
-			color: #0f0;
-			text-shadow: 0 0 20px #0f0;
-		}
-		.shutdown-content h1 {
-			font-size: 48px;
-			margin-bottom: 20px;
-			animation: blink 1.5s infinite;
-		}
-		@keyframes blink {
-			0%, 100% { opacity: 1; }
-			50% { opacity: 0.3; }
-		}
-		.restart-btn {
-			background: #0f0;
-			color: #000;
-			border: none;
-			padding: 12px 30px;
-			margin-top: 30px;
-			font-family: inherit;
-			font-weight: bold;
-			font-size: 18px;
-			cursor: pointer;
-			box-shadow: 0 0 30px #0f0;
-		}
+        .confirm-dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(3px);
+            z-index: 5000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .confirm-content {
+            background: #0a0a0a;
+            border: 2px solid #0f0;
+            box-shadow: 0 0 40px #0f0;
+            width: 350px;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .confirm-header {
+            color: #0f0;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 0 0 8px #0f0;
+        }
+        .confirm-body {
+            color: #0f0;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+        .confirm-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+        .confirm-btn {
+            background: transparent;
+            border: 1px solid #0f0;
+            color: #0f0;
+            padding: 6px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+        .confirm-btn:hover {
+            background: #0f0;
+            color: #000;
+            box-shadow: 0 0 15px #0f0;
+        }
+        .shutdown-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .shutdown-content {
+            text-align: center;
+            color: #0f0;
+            text-shadow: 0 0 20px #0f0;
+        }
+        .shutdown-content h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            animation: blink 1.5s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        .restart-btn {
+            background: #0f0;
+            color: #000;
+            border: none;
+            padding: 12px 30px;
+            margin-top: 30px;
+            font-family: inherit;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 0 30px #0f0;
+        }
+        /* Mobile */
+        @media (max-width: 600px) {
+            .desktop-icons { flex-direction: row !important; flex-wrap: wrap; left: 10px; top: 10px; gap: 10px; }
+            .desktop-icon { width: 70px; padding: 5px; }
+            .desktop-icon i { font-size: 28px; }
+            .os-window { width: 96% !important; left: 2% !important; }
+        }
     </style>
+</head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kevin OS</title>
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Your existing CSS (we assume it's in assets/css/main.css) -->
+    <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
 
-    <!-- Background canvases (keep existing) -->
+    <!-- Background canvases -->
     <canvas id="code-rain" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:2; opacity:0.25; pointer-events:none;"></canvas>
     <canvas id="explosion-canvas" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:3;"></canvas>
+    <canvas id="zeppeli-canvas" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:4;"></canvas>
 
     <!-- Desktop Icons -->
     <div id="desktop">
         <div class="desktop-icons">
-            <div class="desktop-icon" data-window="projects">
-                <i class="fas fa-folder-open"></i>
-                <span>Projects</span>
-            </div>
-            <div class="desktop-icon" data-window="about">
-                <i class="fas fa-user"></i>
-                <span>About Me</span>
-            </div>
-            <div class="desktop-icon" data-window="resume">
-                <i class="fas fa-file-alt"></i>
-                <span>Resume</span>
-            </div>
-            <div class="desktop-icon" data-window="contact">
-                <i class="fas fa-envelope"></i>
-                <span>Contact</span>
-            </div>
+            <div class="desktop-icon" data-window="projects"><i class="fas fa-folder-open"></i><span>Projects</span></div>
+            <div class="desktop-icon" data-window="about"><i class="fas fa-user"></i><span>About Me</span></div>
+            <div class="desktop-icon" data-window="resume"><i class="fas fa-file-alt"></i><span>Resume</span></div>
+            <div class="desktop-icon" data-window="contact"><i class="fas fa-envelope"></i><span>Contact</span></div>
         </div>
     </div>
 
     <!-- Windows -->
-    <!-- Projects Window -->
     <div id="window-projects" class="os-window">
-        <div class="window-header">
-            <span>📁 Projects</span>
-            <div class="window-controls">
-                <div class="window-btn close-window">✕</div>
-            </div>
-        </div>
+        <div class="window-header"><span>📁 Projects</span><div class="window-controls"><div class="window-btn close-window">✕</div></div></div>
         <div class="window-content">
             <h3>🗂️ Gitlet – Version Control System</h3>
             <p>A mini Git clone with branching, merging, and remote features. <a href="https://github.com/KEV-INZHU/Git" target="_blank" style="color:#0f0;">View on GitHub →</a></p>
@@ -345,15 +389,8 @@
             <p>Modernized student org site with MERN stack. <a href="https://ieee.studentorg.berkeley.edu/" target="_blank" style="color:#0f0;">Visit Site →</a></p>
         </div>
     </div>
-
-    <!-- About Window -->
     <div id="window-about" class="os-window">
-        <div class="window-header">
-            <span>👤 About Me</span>
-            <div class="window-controls">
-                <div class="window-btn close-window">✕</div>
-            </div>
-        </div>
+        <div class="window-header"><span>👤 About Me</span><div class="window-controls"><div class="window-btn close-window">✕</div></div></div>
         <div class="window-content">
             <p><strong>Kevin Zhu</strong> – Full Stack Developer</p>
             <p>UC Berkeley EECS student. Passionate about building clean, efficient systems.</p>
@@ -362,15 +399,8 @@
             <img src="images/kevin.jpg" alt="Kevin" style="width:100%; margin-top:15px; border:1px solid #0f0;">
         </div>
     </div>
-
-    <!-- Resume Window -->
     <div id="window-resume" class="os-window">
-        <div class="window-header">
-            <span>📄 Resume.pdf</span>
-            <div class="window-controls">
-                <div class="window-btn close-window">✕</div>
-            </div>
-        </div>
+        <div class="window-header"><span>📄 Resume.pdf</span><div class="window-controls"><div class="window-btn close-window">✕</div></div></div>
         <div class="window-content">
             <p><i class="fas fa-download"></i> <a href="./assets/resume.pdf" download style="color:#0f0;">Download Resume (PDF)</a></p>
             <hr style="border-color:#0f0; margin:15px 0;">
@@ -382,15 +412,8 @@
             </ul>
         </div>
     </div>
-
-    <!-- Contact Window -->
     <div id="window-contact" class="os-window">
-        <div class="window-header">
-            <span>📧 Contact</span>
-            <div class="window-controls">
-                <div class="window-btn close-window">✕</div>
-            </div>
-        </div>
+        <div class="window-header"><span>📧 Contact</span><div class="window-controls"><div class="window-btn close-window">✕</div></div></div>
         <div class="window-content">
             <p><i class="fas fa-envelope"></i> Kevin-Zhu@Berkeley.edu</p>
             <p><i class="fab fa-linkedin"></i> <a href="https://www.linkedin.com/in/kevinzzhu/" target="_blank" style="color:#0f0;">linkedin.com/in/kevinzzhu</a></p>
@@ -414,6 +437,27 @@
         <div class="start-menu-item" id="shutdown"><i class="fas fa-power-off"></i> Shut Down</div>
     </div>
 
+    <!-- Custom Confirmation Dialog -->
+    <div id="confirm-dialog" class="confirm-dialog" style="display: none;">
+        <div class="confirm-content">
+            <div class="confirm-header">⚠ SYSTEM MESSAGE</div>
+            <div class="confirm-body" id="confirm-message">Are you sure?</div>
+            <div class="confirm-buttons">
+                <button class="confirm-btn confirm-yes">YES</button>
+                <button class="confirm-btn confirm-no">NO</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shutdown Screen -->
+    <div id="shutdown-screen" class="shutdown-screen" style="display: none;">
+        <div class="shutdown-content">
+            <h1>SYSTEM HALTED</h1>
+            <p>Press any key or click to restart</p>
+            <button class="restart-btn">RESTART SYSTEM</button>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/browser.min.js"></script>
@@ -421,245 +465,622 @@
     <script src="assets/js/util.js"></script>
     <script src="assets/js/main.js"></script>
     <script>
-        // ============================================
-// KEVIN OS – MATRIX DESKTOP ENVIRONMENT (v2)
-// ============================================
-// ============================================
-// KEVIN OS – MATRIX DESKTOP ENVIRONMENT (v3)
-// ============================================
-(function() {
-    document.addEventListener('DOMContentLoaded', function() {
-        
-        const windows = {
-            projects: document.getElementById('window-projects'),
-            about: document.getElementById('window-about'),
-            resume: document.getElementById('window-resume'),
-            contact: document.getElementById('window-contact')
-        };
+        (function() {
+            document.addEventListener('DOMContentLoaded', function() {
+                
+                // ---------- WINDOWS & TILING ----------
+                const windows = {
+                    projects: document.getElementById('window-projects'),
+                    about: document.getElementById('window-about'),
+                    resume: document.getElementById('window-resume'),
+                    contact: document.getElementById('window-contact')
+                };
 
-        // Helper: Custom confirm dialog
-        function showConfirm(message, onYes, onNo) {
-            const dialog = document.getElementById('confirm-dialog');
-            const msgEl = document.getElementById('confirm-message');
-            const yesBtn = dialog.querySelector('.confirm-yes');
-            const noBtn = dialog.querySelector('.confirm-no');
-            
-            msgEl.textContent = message;
-            dialog.style.display = 'flex';
-            
-            const cleanup = () => {
-                dialog.style.display = 'none';
-                yesBtn.removeEventListener('click', onYesHandler);
-                noBtn.removeEventListener('click', onNoHandler);
-            };
-            
-            const onYesHandler = () => { cleanup(); if (onYes) onYes(); };
-            const onNoHandler = () => { cleanup(); if (onNo) onNo(); };
-            
-            yesBtn.addEventListener('click', onYesHandler);
-            noBtn.addEventListener('click', onNoHandler);
-        }
+                const MASTER_WIDTH_RATIO = 0.55;
+                const ICON_COLUMN_WIDTH = 100; // width reserved for desktop icons
+                const TILE_PADDING = 8;
+                const TASKBAR_HEIGHT = 40;
 
-        function openWindow(windowId) {
-            const win = windows[windowId];
-            if (!win) return;
-            
-            win.style.display = 'flex';
-            win.style.flexDirection = 'column';
-            
-            const winWidth = Math.min(window.innerWidth * 0.9, 900);
-            const winHeight = Math.min(window.innerHeight * 0.85, 700);
-            win.style.width = winWidth + 'px';
-            win.style.height = winHeight + 'px';
-            win.style.left = ((window.innerWidth - winWidth) / 2) + 'px';
-            win.style.top = ((window.innerHeight - winHeight) / 2) + 'px';
-            
-            bringToFront(win);
-            
-            if (window.innerWidth <= 600) {
-                win.style.width = '96%';
-                win.style.height = '90%';
-                win.style.left = '2%';
-                win.style.top = '5%';
-            }
-        }
-
-        function bringToFront(win) {
-            document.querySelectorAll('.os-window').forEach(w => w.style.zIndex = 200);
-            win.style.zIndex = 300;
-        }
-
-        // Desktop icons: single click open
-        document.querySelectorAll('.desktop-icon').forEach(icon => {
-            icon.addEventListener('click', () => openWindow(icon.dataset.window));
-        });
-
-        // Start menu items
-        document.querySelectorAll('.start-menu-item[data-window]').forEach(item => {
-            item.addEventListener('click', () => {
-                openWindow(item.dataset.window);
-                document.getElementById('start-menu').style.display = 'none';
-            });
-        });
-
-        // Close buttons
-        document.querySelectorAll('.close-window').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const win = e.target.closest('.os-window');
-                if (win) win.style.display = 'none';
-            });
-        });
-
-        // Dragging (mouse + touch)
-        document.querySelectorAll('.os-window').forEach(win => {
-            const header = win.querySelector('.window-header');
-            let isDragging = false, offsetX, offsetY;
-
-            const onMouseMove = (e) => {
-                if (!isDragging) return;
-                e.preventDefault();
-                const x = e.clientX - offsetX;
-                const y = e.clientY - offsetY;
-                const maxX = window.innerWidth - win.offsetWidth;
-                const maxY = window.innerHeight - win.offsetHeight;
-                win.style.left = Math.max(0, Math.min(x, maxX)) + 'px';
-                win.style.top = Math.max(0, Math.min(y, maxY)) + 'px';
-            };
-            const onMouseUp = () => {
-                isDragging = false;
-                win.style.cursor = '';
-                window.removeEventListener('mousemove', onMouseMove);
-                window.removeEventListener('mouseup', onMouseUp);
-            };
-
-            header.addEventListener('mousedown', (e) => {
-                if (e.target.classList.contains('window-btn')) return;
-                isDragging = true;
-                const rect = win.getBoundingClientRect();
-                offsetX = e.clientX - rect.left;
-                offsetY = e.clientY - rect.top;
-                win.style.cursor = 'grabbing';
-                bringToFront(win);
-                e.preventDefault();
-                window.addEventListener('mousemove', onMouseMove);
-                window.addEventListener('mouseup', onMouseUp);
-            });
-
-            // Touch
-            header.addEventListener('touchstart', (e) => {
-                if (e.target.classList.contains('window-btn')) return;
-                const touch = e.touches[0];
-                isDragging = true;
-                const rect = win.getBoundingClientRect();
-                offsetX = touch.clientX - rect.left;
-                offsetY = touch.clientY - rect.top;
-                bringToFront(win);
-                e.preventDefault();
-            });
-            window.addEventListener('touchmove', (e) => {
-                if (!isDragging) return;
-                const touch = e.touches[0];
-                const x = touch.clientX - offsetX;
-                const y = touch.clientY - offsetY;
-                const maxX = window.innerWidth - win.offsetWidth;
-                const maxY = window.innerHeight - win.offsetHeight;
-                win.style.left = Math.max(0, Math.min(x, maxX)) + 'px';
-                win.style.top = Math.max(0, Math.min(y, maxY)) + 'px';
-                e.preventDefault();
-            });
-            window.addEventListener('touchend', () => { isDragging = false; });
-        });
-
-        // Start menu toggle
-        const startBtn = document.getElementById('start-btn');
-        const startMenu = document.getElementById('start-menu');
-        startBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            startMenu.style.display = startMenu.style.display === 'block' ? 'none' : 'block';
-        });
-        document.addEventListener('click', () => startMenu.style.display = 'none');
-        startMenu.addEventListener('click', (e) => e.stopPropagation());
-
-        // Shutdown with custom confirm
-        document.getElementById('shutdown').addEventListener('click', () => {
-            showConfirm('Shut down Kevin OS?', () => {
-                document.querySelectorAll('.os-window').forEach(w => w.style.display = 'none');
-                startMenu.style.display = 'none';
-                document.getElementById('shutdown-screen').style.display = 'flex';
-            });
-        });
-
-        // Reboot
-        const rebootItem = document.createElement('div');
-        rebootItem.className = 'start-menu-item';
-        rebootItem.innerHTML = '<i class="fas fa-sync-alt"></i> Reboot';
-        rebootItem.addEventListener('click', () => {
-            showConfirm('Reboot Kevin OS?', () => location.reload());
-        });
-        document.querySelector('#start-menu hr').before(rebootItem);
-
-        // Restart from shutdown screen
-        const shutdownScreen = document.getElementById('shutdown-screen');
-        shutdownScreen.querySelector('.restart-btn').addEventListener('click', () => location.reload());
-        shutdownScreen.addEventListener('click', () => location.reload());
-        document.addEventListener('keydown', (e) => {
-            if (shutdownScreen.style.display === 'flex') location.reload();
-        });
-
-        // Clock
-        function updateClock() {
-            document.getElementById('taskbar-time').textContent = new Date().toLocaleTimeString();
-        }
-        updateClock();
-        setInterval(updateClock, 1000);
-
-        // Responsive resize handler
-        window.addEventListener('resize', () => {
-            document.querySelectorAll('.os-window').forEach(win => {
-                if (win.style.display === 'flex') {
-                    const rect = win.getBoundingClientRect();
-                    if (rect.right > window.innerWidth) win.style.left = Math.max(0, window.innerWidth - win.offsetWidth) + 'px';
-                    if (rect.bottom > window.innerHeight) win.style.top = Math.max(0, window.innerHeight - win.offsetHeight) + 'px';
+                function getOpenWindows() {
+                    return Array.from(document.querySelectorAll('.os-window')).filter(w => w.style.display === 'flex');
                 }
-            });
-        });
 
-        // Prevent clicks inside windows from bubbling
-        document.querySelectorAll('.os-window').forEach(win => win.addEventListener('click', (e) => e.stopPropagation()));
+                function getAvailableArea() {
+    return {
+        x: ICON_COLUMN_WIDTH + TILE_PADDING,
+        y: TILE_PADDING,
+        width: window.innerWidth - ICON_COLUMN_WIDTH - TILE_PADDING * 2,
+        height: window.innerHeight - TASKBAR_HEIGHT - TILE_PADDING * 2
+    };
+}
 
-        // Mobile icon layout
-        const style = document.createElement('style');
-        style.textContent = `
-            @media (max-width: 600px) {
-                .desktop-icons { flex-direction: row !important; flex-wrap: wrap; left: 10px; top: 10px; gap: 10px; }
-                .desktop-icon { width: 70px; padding: 5px; }
-                .desktop-icon i { font-size: 28px; }
-                .os-window { width: 96% !important; left: 2% !important; }
-            }
-        `;
-        document.head.appendChild(style);
+                function tileWindowsMasterLayout() {
+                    const openWindows = getOpenWindows();
+                    if (openWindows.length === 0) return;
+                    
+                    const area = getAvailableArea();
+                    
+                    if (openWindows.length === 1) {
+                        const win = openWindows[0];
+                        win.style.left = area.x + 'px';
+                        win.style.top = area.y + 'px';
+                        win.style.width = area.width + 'px';
+                        win.style.height = area.height + 'px';
+                        return;
+                    }
+                    
+                    const masterWin = openWindows[0];
+                    const slaveWins = openWindows.slice(1);
+                    const masterWidth = area.width * MASTER_WIDTH_RATIO;
+                    const slaveWidth = area.width - masterWidth - TILE_PADDING;
+                    const slaveCount = slaveWins.length;
+                    
+                    masterWin.style.left = area.x + 'px';
+                    masterWin.style.top = area.y + 'px';
+                    masterWin.style.width = (masterWidth - TILE_PADDING/2) + 'px';
+                    masterWin.style.height = area.height + 'px';
+                    
+                    if (slaveCount > 0) {
+                        const slaveHeight = (area.height - (slaveCount - 1) * TILE_PADDING) / slaveCount;
+                        slaveWins.forEach((win, index) => {
+                            const topOffset = area.y + index * (slaveHeight + TILE_PADDING);
+                            win.style.left = (area.x + masterWidth + TILE_PADDING/2) + 'px';
+                            win.style.top = topOffset + 'px';
+                            win.style.width = slaveWidth + 'px';
+                            win.style.height = slaveHeight + 'px';
+                        });
+                    }
+                }
+
+                function bringToFront(win) {
+                    document.querySelectorAll('.os-window').forEach(w => w.style.zIndex = 200);
+                    win.style.zIndex = 300;
+                }
+
+                function showConfirm(message, onYes, onNo) {
+                    const dialog = document.getElementById('confirm-dialog');
+                    const msgEl = document.getElementById('confirm-message');
+                    const yesBtn = dialog.querySelector('.confirm-yes');
+                    const noBtn = dialog.querySelector('.confirm-no');
+                    msgEl.textContent = message;
+                    dialog.style.display = 'flex';
+                    const cleanup = () => {
+                        dialog.style.display = 'none';
+                        yesBtn.removeEventListener('click', onYesHandler);
+                        noBtn.removeEventListener('click', onNoHandler);
+                    };
+                    const onYesHandler = () => { cleanup(); if (onYes) onYes(); };
+                    const onNoHandler = () => { cleanup(); if (onNo) onNo(); };
+                    yesBtn.addEventListener('click', onYesHandler);
+                    noBtn.addEventListener('click', onNoHandler);
+                }
+
+                function openWindow(windowId) {
+                    const win = windows[windowId];
+                    if (!win) return;
+                    if (win.style.display === 'flex') {
+                        bringToFront(win);
+                        return;
+                    }
+                    win.style.display = 'flex';
+                    win.style.flexDirection = 'column';
+                    tileWindowsMasterLayout();
+                    win.classList.add('window-opening');
+                    win.offsetHeight;
+                    requestAnimationFrame(() => win.classList.remove('window-opening'));
+                    bringToFront(win);
+                }
+
+                // Desktop icons
+                document.querySelectorAll('.desktop-icon').forEach(icon => {
+                    icon.addEventListener('click', () => openWindow(icon.dataset.window));
+                });
+
+                // Start menu items
+                document.querySelectorAll('.start-menu-item[data-window]').forEach(item => {
+                    item.addEventListener('click', () => {
+                        openWindow(item.dataset.window);
+                        document.getElementById('start-menu').style.display = 'none';
+                    });
+                });
+
+                // Close buttons
+                document.querySelectorAll('.close-window').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        const win = e.target.closest('.os-window');
+        if (!win) return;
+        
+        // Prevent multiple close animations
+        if (win.classList.contains('window-closing')) return;
+        
+        win.classList.add('window-closing');
+        
+        // Wait for animation to finish before hiding and re-tiling
+        const onAnimationEnd = () => {
+            win.removeEventListener('animationend', onAnimationEnd);
+            win.classList.remove('window-closing');
+            win.style.display = 'none';
+            win.classList.remove('window-opening');
+            // Reset transform/opacity in case they were altered
+            win.style.transform = '';
+            win.style.opacity = '';
+            tileWindowsMasterLayout();
+        };
+        
+        win.addEventListener('animationend', onAnimationEnd);
+        
     });
-})();
-    </script>
-	<!-- Custom Confirmation Dialog -->
-<div id="confirm-dialog" class="confirm-dialog" style="display: none;">
-    <div class="confirm-content">
-        <div class="confirm-header">⚠ SYSTEM MESSAGE</div>
-        <div class="confirm-body" id="confirm-message">Are you sure?</div>
-        <div class="confirm-buttons">
-            <button class="confirm-btn confirm-yes">YES</button>
-            <button class="confirm-btn confirm-no">NO</button>
-        </div>
-    </div>
-</div>
+});
 
-<!-- Shutdown Screen -->
-<div id="shutdown-screen" class="shutdown-screen" style="display: none;">
-    <div class="shutdown-content">
-        <h1>SYSTEM HALTED</h1>
-        <p>Press any key or click to restart</p>
-        <button class="restart-btn">RESTART SYSTEM</button>
-    </div>
-</div>
+                // Dragging (mouse + touch)
+                document.querySelectorAll('.os-window').forEach(win => {
+                    const header = win.querySelector('.window-header');
+                    let isDragging = false, offsetX, offsetY;
+
+                    const onMouseMove = (e) => {
+                        if (!isDragging) return;
+                        e.preventDefault();
+                        const x = e.clientX - offsetX;
+                        const y = e.clientY - offsetY;
+                        const maxX = window.innerWidth - win.offsetWidth;
+                        const maxY = window.innerHeight - win.offsetHeight;
+                        win.style.left = Math.max(0, Math.min(x, maxX)) + 'px';
+                        win.style.top = Math.max(0, Math.min(y, maxY)) + 'px';
+                    };
+                    const onMouseUp = () => {
+                        isDragging = false;
+                        win.style.cursor = '';
+                        window.removeEventListener('mousemove', onMouseMove);
+                        window.removeEventListener('mouseup', onMouseUp);
+                    };
+
+                    header.addEventListener('mousedown', (e) => {
+                        if (e.target.classList.contains('window-btn')) return;
+                        isDragging = true;
+                        const rect = win.getBoundingClientRect();
+                        offsetX = e.clientX - rect.left;
+                        offsetY = e.clientY - rect.top;
+                        win.style.cursor = 'grabbing';
+                        bringToFront(win);
+                        e.preventDefault();
+                        window.addEventListener('mousemove', onMouseMove);
+                        window.addEventListener('mouseup', onMouseUp);
+                    });
+
+                    header.addEventListener('touchstart', (e) => {
+                        if (e.target.classList.contains('window-btn')) return;
+                        const touch = e.touches[0];
+                        isDragging = true;
+                        const rect = win.getBoundingClientRect();
+                        offsetX = touch.clientX - rect.left;
+                        offsetY = touch.clientY - rect.top;
+                        bringToFront(win);
+                        e.preventDefault();
+                    });
+                    window.addEventListener('touchmove', (e) => {
+                        if (!isDragging) return;
+                        const touch = e.touches[0];
+                        const x = touch.clientX - offsetX;
+                        const y = touch.clientY - offsetY;
+                        const maxX = window.innerWidth - win.offsetWidth;
+                        const maxY = window.innerHeight - win.offsetHeight;
+                        win.style.left = Math.max(0, Math.min(x, maxX)) + 'px';
+                        win.style.top = Math.max(0, Math.min(y, maxY)) + 'px';
+                        e.preventDefault();
+                    });
+                    window.addEventListener('touchend', () => { isDragging = false; });
+                });
+
+                // Start menu toggle
+                const startBtn = document.getElementById('start-btn');
+                const startMenu = document.getElementById('start-menu');
+                startBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    startMenu.style.display = startMenu.style.display === 'block' ? 'none' : 'block';
+                });
+                document.addEventListener('click', () => startMenu.style.display = 'none');
+                startMenu.addEventListener('click', (e) => e.stopPropagation());
+
+                // Shutdown & Reboot
+                document.getElementById('shutdown').addEventListener('click', () => {
+                    showConfirm('Shut down Kevin OS?', () => {
+                        document.querySelectorAll('.os-window').forEach(w => w.style.display = 'none');
+                        startMenu.style.display = 'none';
+                        document.getElementById('shutdown-screen').style.display = 'flex';
+                    });
+                });
+
+                const rebootItem = document.createElement('div');
+                rebootItem.className = 'start-menu-item';
+                rebootItem.innerHTML = '<i class="fas fa-sync-alt"></i> Reboot';
+                rebootItem.addEventListener('click', () => showConfirm('Reboot Kevin OS?', () => location.reload()));
+                document.querySelector('#start-menu hr').before(rebootItem);
+
+                const shutdownScreen = document.getElementById('shutdown-screen');
+                shutdownScreen.querySelector('.restart-btn').addEventListener('click', () => location.reload());
+                shutdownScreen.addEventListener('click', () => location.reload());
+                document.addEventListener('keydown', (e) => {
+                    if (shutdownScreen.style.display === 'flex') location.reload();
+                });
+
+                // Clock
+                function updateClock() {
+                    document.getElementById('taskbar-time').textContent = new Date().toLocaleTimeString();
+                }
+                updateClock();
+                setInterval(updateClock, 1000);
+
+                window.addEventListener('resize', () => {
+                    document.querySelectorAll('.os-window').forEach(win => {
+                        if (win.style.display === 'flex') {
+                            const rect = win.getBoundingClientRect();
+                            if (rect.right > window.innerWidth) win.style.left = Math.max(0, window.innerWidth - win.offsetWidth) + 'px';
+                            if (rect.bottom > window.innerHeight) win.style.top = Math.max(0, window.innerHeight - win.offsetHeight) + 'px';
+                        }
+                    });
+                    tileWindowsMasterLayout();
+                });
+
+                document.querySelectorAll('.os-window').forEach(win => win.addEventListener('click', (e) => e.stopPropagation()));
+
+                // ---------- GYRO ZEPPELI STEEL BALL ----------
+                const canvas = document.getElementById('zeppeli-canvas');
+                const ctx = canvas.getContext('2d');
+                let width, height;
+                let mouseX = -1000, mouseY = -1000;
+                let trailParticles = [];
+
+                function resizeCanvas() {
+                    width = window.innerWidth;
+                    height = window.innerHeight;
+                    canvas.width = width;
+                    canvas.height = height;
+                }
+                window.addEventListener('resize', resizeCanvas);
+                resizeCanvas();
+
+class SteelBall {
+    constructor() {
+        this.x = width / 2;
+        this.y = height / 2;
+        this.vx = 0;
+        this.vy = 0;
+        
+        // Wandering
+        this.wanderAngle = Math.random() * Math.PI * 2;
+        this.wanderRadius = 150;
+        this.wanderDistance = 200;
+        this.maxSpeed = 2.5;
+        
+        // State
+        this.state = 'wandering';
+        this.stateTimer = 0;
+        this.rotation = 0;
+        this.spinSpeed = 0.02;
+        this.glowPhase = 0;
+        
+        // Wind‑up (static position)
+        this.windUpDuration = 120;           // 2 seconds
+        this.windUpStartX = 0;
+        this.windUpStartY = 0;
+        
+        // Attack physics
+        this.attackAccel = 1.5;
+        this.attackDrag = 0.95;
+        this.attackSpeed = 0;
+        this.attackAngle = 0;
+        this.hasHit = false;
+        this.bounceCount = 0;
+        
+        // Cursor
+        this.cursorX = -1000;
+        this.cursorY = -1000;
+        this.PROXIMITY_RADIUS = 220;
+    }
+    
+    handleWallCollision() {
+        const margin = 25;
+        const bounceDamping = 0.65; // energy retained after wall bounce
+        
+        let bounced = false;
+        
+        if (this.x < margin) {
+            this.x = margin;
+            this.vx = Math.abs(this.vx) * bounceDamping;
+            bounced = true;
+        }
+        if (this.x > width - margin) {
+            this.x = width - margin;
+            this.vx = -Math.abs(this.vx) * bounceDamping;
+            bounced = true;
+        }
+        if (this.y < margin) {
+            this.y = margin;
+            this.vy = Math.abs(this.vy) * bounceDamping;
+            bounced = true;
+        }
+        if (this.y > height - margin) {
+            this.y = height - margin;
+            this.vy = -Math.abs(this.vy) * bounceDamping;
+            bounced = true;
+        }
+        
+        // If we bounced, update the movement direction variables
+        if (bounced) {
+            this.attackAngle = Math.atan2(this.vy, this.vx);
+            this.attackSpeed = Math.hypot(this.vx, this.vy);
+        }
+    }
+    
+    update(targetX, targetY) {
+        this.cursorX = targetX;
+        this.cursorY = targetY;
+        const dx = this.cursorX - this.x;
+        const dy = this.cursorY - this.y;
+        const distToCursor = Math.hypot(dx, dy);
+        
+        switch (this.state) {
+            case 'wandering':
+                // Autonomous wandering
+                this.wanderAngle += (Math.random() - 0.5) * 0.25;
+                const circleX = this.x + this.vx * this.wanderDistance;
+                const circleY = this.y + this.vy * this.wanderDistance;
+                const targetWanderX = circleX + Math.cos(this.wanderAngle) * this.wanderRadius;
+                const targetWanderY = circleY + Math.sin(this.wanderAngle) * this.wanderRadius;
+                const steerX = targetWanderX - this.x;
+                const steerY = targetWanderY - this.y;
+                const steerDist = Math.hypot(steerX, steerY);
+                if (steerDist > 0) {
+                    this.vx += (steerX / steerDist) * 0.12;
+                    this.vy += (steerY / steerDist) * 0.12;
+                }
+                const speed = Math.hypot(this.vx, this.vy);
+                if (speed > this.maxSpeed) {
+                    this.vx *= this.maxSpeed / speed;
+                    this.vy *= this.maxSpeed / speed;
+                }
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                this.handleWallCollision(); // <-- added
+                
+                this.rotation += 0.01;
+                this.spinSpeed = 0.02;
+                this.glowPhase += 0.02;
+                
+                if (this.cursorX > 0 && this.cursorY > 0 && distToCursor < this.PROXIMITY_RADIUS) {
+                    this.state = 'winding';
+                    this.stateTimer = 0;
+                    this.hasHit = false;
+                    this.bounceCount = 0;
+                    this.windUpStartX = this.x;
+                    this.windUpStartY = this.y;
+                }
+                break;
+                
+            case 'winding':
+                this.stateTimer++;
+                const progress = Math.min(1, this.stateTimer / this.windUpDuration);
+                
+                // Stay near wind‑up position
+                const targetX = this.windUpStartX;
+                const targetY = this.windUpStartY;
+                this.x += (targetX - this.x) * 0.05;
+                this.y += (targetY - this.y) * 0.05;
+                
+                this.handleWallCollision(); // <-- added
+                
+                this.spinSpeed = 0.05 + progress * 0.8;
+                this.rotation += this.spinSpeed;
+                this.glowPhase += 0.05 + progress * 0.2;
+                
+                if (this.stateTimer >= this.windUpDuration) {
+                    this.state = 'attacking';
+                    this.stateTimer = 0;
+                    this.attackSpeed = 0;
+                    this.attackAngle = Math.atan2(this.cursorY - this.y, this.cursorX - this.x);
+                }
+                break;
+                
+            case 'attacking':
+                this.stateTimer++;
+                
+                // Straight line movement based on attack angle and speed
+                this.vx = Math.cos(this.attackAngle) * this.attackSpeed;
+                this.vy = Math.sin(this.attackAngle) * this.attackSpeed;
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                this.handleWallCollision(); // <-- added (updates angle/speed if wall hit)
+                
+                // Accelerate (only if no wall hit recently, but safe to apply)
+                this.attackSpeed += this.attackAccel;
+                this.attackSpeed *= this.attackDrag;
+                
+                this.spinSpeed = 0.9;
+                this.rotation += this.spinSpeed;
+                
+                trailParticles.push({ x: this.x, y: this.y, life: 1.0, size: 22 });
+                
+                // Hit detection with cursor
+                const hitDist = Math.hypot(this.x - this.cursorX, this.y - this.cursorY);
+                if (hitDist < 35 && !this.hasHit && this.stateTimer > 5) {
+                    this.hasHit = true;
+                    this.bounceCount++;
+                    
+                    // Reflect velocity off cursor
+                    const dx = this.x - this.cursorX;
+                    const dy = this.y - this.cursorY;
+                    const dist = Math.hypot(dx, dy);
+                    if (dist > 0) {
+                        const nx = dx / dist;
+                        const ny = dy / dist;
+                        const dot = this.vx * nx + this.vy * ny;
+                        this.vx = this.vx - 2 * dot * nx;
+                        this.vy = this.vy - 2 * dot * ny;
+                        this.attackAngle = Math.atan2(this.vy, this.vx);
+                        this.attackSpeed = Math.hypot(this.vx, this.vy) * 0.5; // softer bounce
+                    }
+                    
+                    // Explosion particles
+                    for (let i = 0; i < 8; i++) {
+                        trailParticles.push({
+                            x: this.x, y: this.y,
+                            life: 1.0,
+                            size: 15 + Math.random() * 15
+                        });
+                    }
+                }
+                
+                const overshootDist = Math.hypot(this.x - this.cursorX, this.y - this.cursorY);
+                if ((this.hasHit && this.attackSpeed < 4) || overshootDist > 400 || this.stateTimer > 40) {
+                    this.state = 'returning';
+                    this.stateTimer = 0;
+                }
+                break;
+                
+            case 'returning':
+                this.stateTimer++;
+                const returnProgress = Math.min(1, this.stateTimer / 35);
+                
+                this.attackSpeed *= 0.92;
+                this.vx = Math.cos(this.attackAngle) * this.attackSpeed;
+                this.vy = Math.sin(this.attackAngle) * this.attackSpeed;
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                this.handleWallCollision(); // <-- added
+                
+                this.spinSpeed = 0.15 * (1 - returnProgress);
+                this.rotation += this.spinSpeed;
+                
+                if (returnProgress >= 1 || this.attackSpeed < 0.5) {
+                    this.state = 'wandering';
+                    this.wanderAngle = Math.atan2(this.vy, this.vx) || Math.random() * Math.PI * 2;
+                    this.vx *= 0.5;
+                    this.vy *= 0.5;
+                }
+                break;
+        }
+        
+        trailParticles = trailParticles.filter(p => {
+            p.life -= 0.015;
+            p.size *= 0.97;
+            return p.life > 0;
+        });
+    }
+    
+                    
+                    draw(ctx) {
+                        trailParticles.forEach(p => {
+                            ctx.save();
+                            ctx.globalAlpha = p.life * 0.5;
+                            ctx.shadowColor = '#ffd700';
+                            ctx.shadowBlur = 20;
+                            ctx.beginPath();
+                            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                            const gradient = ctx.createRadialGradient(p.x-4, p.y-4, 4, p.x, p.y, p.size);
+                            gradient.addColorStop(0, '#ffd700');
+                            gradient.addColorStop(1, '#b8860b');
+                            ctx.fillStyle = gradient;
+                            ctx.fill();
+                            ctx.restore();
+                        });
+                        
+                        const radius = 22;
+                        const pulse = 1 + 0.3 * Math.sin(this.glowPhase);
+                        let glowColor = '#ffd700';
+                        let glowSize = 25;
+                        
+                        if (this.state === 'winding') {
+                            glowSize = 40 + (this.stateTimer / this.windUpDuration) * 60;
+                            glowColor = '#ffaa00';
+                        }
+                        if (this.state === 'attacking') {
+                            glowSize = 80;
+                            glowColor = '#ffffff';
+                        }
+                        
+                        ctx.shadowColor = glowColor;
+                        ctx.shadowBlur = glowSize * pulse;
+                        
+                        const gradient = ctx.createRadialGradient(this.x-6, this.y-6, 6, this.x, this.y, radius+8);
+                        gradient.addColorStop(0, '#fff8dc');
+                        gradient.addColorStop(0.3, '#ffd700');
+                        gradient.addColorStop(0.7, '#b8860b');
+                        gradient.addColorStop(1, '#2a2a2a');
+                        
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, radius, 0, Math.PI*2);
+                        ctx.fillStyle = gradient;
+                        ctx.fill();
+                        ctx.strokeStyle = this.state === 'attacking' ? '#ffffff' : '#ffd700';
+                        ctx.lineWidth = this.state === 'attacking' ? 4.5 : 2.5;
+                        ctx.stroke();
+                        
+                        ctx.save();
+                        ctx.translate(this.x, this.y);
+                        ctx.rotate(this.rotation);
+                        ctx.shadowBlur = glowSize * pulse;
+                        ctx.beginPath();
+                        ctx.moveTo(-radius, 0);
+                        ctx.lineTo(radius, 0);
+                        ctx.moveTo(0, -radius);
+                        ctx.lineTo(0, radius);
+                        ctx.strokeStyle = '#ffd700';
+                        ctx.lineWidth = this.state === 'attacking' ? 5 : 3.5;
+                        ctx.stroke();
+                        
+                        ctx.beginPath();
+                        ctx.arc(0, 0, radius*0.6, 0, Math.PI*2);
+                        ctx.strokeStyle = '#00ffff';
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+                        
+                        ctx.beginPath();
+                        ctx.arc(0, 0, this.state === 'attacking' ? 9 : 5, 0, Math.PI*2);
+                        ctx.fillStyle = this.state === 'attacking' ? '#ffffff' : '#ffd700';
+                        ctx.shadowBlur = 50;
+                        ctx.fill();
+                        
+                        ctx.restore();
+                        ctx.shadowBlur = 0;
+                        
+                        // Debug: proximity ring (comment out to remove)
+                        ctx.strokeStyle = '#ffd700';
+                        ctx.lineWidth = 1;
+                        ctx.setLineDash([5, 5]);
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.PROXIMITY_RADIUS, 0, Math.PI*2);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                    }
+                }
+
+                const ball = new SteelBall();
+
+                // Track mouse
+                document.addEventListener('mousemove', (e) => {
+                    mouseX = e.clientX;
+                    mouseY = e.clientY;
+                });
+                document.addEventListener('mouseleave', () => {
+                    mouseX = mouseY = -1000;
+                });
+
+                function animateBalls() {
+                    ctx.clearRect(0, 0, width, height);
+                    if (mouseX > 0 && mouseY > 0) {
+                        ball.update(mouseX, mouseY);
+                    } else {
+                        ball.update(ball.x, ball.y); // just wander
+                    }
+                    ball.draw(ctx);
+                    requestAnimationFrame(animateBalls);
+                }
+                animateBalls();
+            });
+        })();
+    </script>
 </body>
 </html>
