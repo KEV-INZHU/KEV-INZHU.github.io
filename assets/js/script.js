@@ -65,7 +65,7 @@
 
 	/* ---------- Typing effect ---------- */
 	var typeTarget = document.getElementById('type-target');
-	var phrases = ['Full-Stack Developer', 'Systems Enthusiast', 'EECS @ UC Berkeley'];
+	var phrases = ['Software Engineer', 'Infra & Security Systems', 'EECS, UC Berkeley'];
 
 	if (prefersReducedMotion) {
 		typeTarget.textContent = phrases[0];
