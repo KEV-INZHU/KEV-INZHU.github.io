@@ -142,26 +142,56 @@
 							<h4>Backend &amp; Infra</h4>
 							<ul class="pill-list">
 								<li>ASP.NET Core</li>
+								<li>REST API Design</li>
+								<li>Redis</li>
 								<li>Kubernetes</li>
 								<li>Docker</li>
-								<li>Redis</li>
 								<li>Azure</li>
+								<li>PKI / Keyfactor</li>
 								<li>PostgreSQL</li>
+								<li>FastAPI</li>
 							</ul>
 						</div>
 						<div class="skills__group">
-							<h4>DevOps &amp; Data</h4>
+							<h4>CI/CD &amp; DevOps</h4>
 							<ul class="pill-list">
 								<li>GitHub Actions</li>
+								<li>Jenkins</li>
 								<li>ArgoCD</li>
+								<li>Artifactory</li>
+								<li>GitOps</li>
+							</ul>
+						</div>
+						<div class="skills__group">
+							<h4>Data &amp; ML</h4>
+							<ul class="pill-list">
+								<li>Hybrid / RAG Search</li>
+								<li>Local Embeddings (Ollama)</li>
+								<li>faster-whisper</li>
+								<li>XBRL Parsing</li>
+							</ul>
+						</div>
+						<div class="skills__group">
+							<h4>Web</h4>
+							<ul class="pill-list">
+								<li>React</li>
+								<li>Node.js</li>
+								<li>HTML / CSS</li>
+							</ul>
+						</div>
+						<div class="skills__group">
+							<h4>Observability</h4>
+							<ul class="pill-list">
 								<li>Datadog</li>
-								<li>RAG / Search</li>
+								<li>Prometheus</li>
+								<li>OpenTelemetry</li>
 							</ul>
 						</div>
 					</div>
 
 					<div class="about__meta reveal">
 						<div><i class="fas fa-map-marker-alt"></i> New York, United States</div>
+						<div><i class="fas fa-graduation-cap"></i> B.S. EECS, UC Berkeley — 2020–2024</div>
 						<a href="mailto:zhukev12@gmail.com"><i class="fas fa-envelope"></i> zhukev12@gmail.com</a>
 					</div>
 				</div>
@@ -246,14 +276,21 @@
 					<span class="project-featured__kicker"><i class="fas fa-star"></i> Featured</span>
 					<h3>Semiconductor Supply-Chain Research Pipeline &amp; Local RAG Search</h3>
 					<p>
-						A resilient, multi-source financial research pipeline tracking 72
-						semiconductor supply-chain companies — ingesting SEC filings, market
-						data, and pricing with retry/backoff and unattended orchestration. On
-						top of it, a hybrid semantic search engine (local embeddings + Postgres
-						full-text, fused via Reciprocal Rank Fusion) and a local GPU
-						speech-to-text pipeline for transcribing podcast sources with no
-						published transcript.
+						A resilient, multi-source financial research pipeline — pulling SEC
+						EDGAR XBRL filings, Yahoo Finance, Alpha Vantage, and FMP data — that
+						maintains full financial statements for 72 semiconductor supply-chain
+						companies (~184K financial facts, 37K daily price bars) with
+						retry/backoff, stale-lock detection, and unattended orchestration. On
+						top of it, a hybrid semantic search engine and a local GPU
+						speech-to-text pipeline for podcast sources with no published
+						transcript.
 					</p>
+
+					<ul class="bullet-list">
+						<li>Root-caused a ticker-tagging bug where 75.7% of 3,973 tagged mentions were false positives; rebuilt the matcher with cashtag/capitalization-aware evidence tiers, cutting mismatched tags to 1,832 while recovering 11 missed tickers — verified by a 30-test regression suite.</li>
+						<li>Designed a hybrid semantic search engine (local embeddings + Postgres full-text, fused via Reciprocal Rank Fusion) over ~27K chunked documents, raising recall@5 from 0.917 to 1.000 and MRR from 0.889 to 0.958 on a scored benchmark.</li>
+						<li>Deployed local GPU speech-to-text (faster-whisper, int8) at ~75x realtime, cutting a ~2,200-episode transcription backlog to 40–50 compute-hours via resumable runs.</li>
+					</ul>
 
 					<div class="stat-row">
 						<div class="stat-chip">
