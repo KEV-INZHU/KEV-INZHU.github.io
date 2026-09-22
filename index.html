@@ -1,411 +1,424 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Kevin Zhu — Software Engineer</title>
+	<meta name="description" content="Kevin Zhu — Software Engineer at Millennium Management, EECS @ UC Berkeley. Building resilient, secure infrastructure." />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="theme-color" content="#0a0b10" />
 
-<html>
-	<head>
-		<!-- <title>Dimension by HTML5 UP</title> -->
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-	</head>
-	<body class="is-preload">
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" />
 
-		<!-- Wrapper -->
-			<div id="wrapper">
-				
-				<!-- Header -->
-					<header id="header">
-						<div class="content">
-							<div class="inner">
-								<h1>Kevin Zhu</h1>
-								<p>Full Stack Developer</p>
-							</div>
-						</div>
-						<nav>
-							<ul>
-								<li><a href="#about">About</a></li>
-								<li><a href="#exp">Exp</a></li>
-								<li><a href="#projects">Projects</a></li>
-								<li><a href="#contact">Contact</a></li>
-								<!--<li><a href="#elements">Elements</a></li>-->
-							</ul>
-						</nav>
-					</header>
+	<link rel="stylesheet" href="assets/css/fontawesome-all.min.css" />
+	<link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body class="is-loading">
 
-				<!-- Main -->
-					<div id="main">
+	<!-- Backdrop -->
+	<div class="backdrop" aria-hidden="true">
+		<canvas id="net"></canvas>
+		<div class="glow glow--a"></div>
+		<div class="glow glow--b"></div>
+		<div class="grid-overlay"></div>
+	</div>
 
-						<!-- Intro -->
-							<article id="exp">
-								<button class="nav-left"><</button>
+	<!-- Nav -->
+	<header class="site-nav" id="site-nav">
+		<div class="site-nav__inner">
+			<a href="#home" class="site-nav__brand">KZ<span class="dot">.</span></a>
 
-								<h2 class="major">experience</h2>
-								<span class="image main"><img src="images/bg1.png" alt="" /></span>
-								<div>
-									<h3>Software Engineering Intern - Millennium<span><h5>Jun 2023 to Aug 2023</h5></span></h3> 
-								</div>
-								<p>Developed an automated security incident report system, implemented a certificate renewal process ensuring 100% uptime for over 2000 apps, and streamlined Azure AD monitoring.</p>
-								<div>
-									<h3>Student IT Technician - Berkeley IT<span><h5>Aug 2021 to Aug 2022</h5></span></h3> 
-								</div>
-								<p>Facilitated desktop support processes, implemented OS upgrades, and efficiently resolved a variety of connectivity issues, enhancing overall technical support for staff and faculty.</p>
-								<div>
-									<h3>Website Committee Director - IEEE <span><h5>Jan 2022 to Present</h5></span></h3> 
-								</div>
-								<p>Led the redevelopment of UC Berkeley’s Startup Fair website & IEEE student organization's website, introducing user-friendly interfaces and robust CRUD functionality, while mentoring a team of 15 members.</p>
-								<button class="nav-right">></button>
-							</article>
+			<nav class="site-nav__links">
+				<a href="#about" data-nav>About</a>
+				<a href="#experience" data-nav>Experience</a>
+				<a href="#projects" data-nav>Projects</a>
+				<a href="#contact" data-nav>Contact</a>
+				<a href="assets/resume/Kevin_Zhu_Resume.pdf" target="_blank" rel="noopener" class="site-nav__cta">Resume</a>
+			</nav>
 
-						<!-- Work -->
-						<article id="projects">
-							<button class="nav-left"><</button>
-							<h2 class="major">Projects</h2>
-							<span class="image main"><img src="images/bg2.jpg" alt="Project Image" /></span>
-							
-							<!-- Project 1 Description -->
-							<div class="project">
-								<div class="project-image">
-									<img src="images/git.png" alt="Git Icon"/>
-								</div>
-								<div class="project-description">
-									<p><a href="https://github.com/KEV-INZHU/Git" target="_blank"><strong>Gitlet - Version Control System:</strong></a> Developed a version control system with functionalities such as branching, remote, and merging similar to Git. </p>
-								</div>
-							</div>
-							
-							<!-- Project 2 Description -->
-							<div class="project">
-								<div class="project-image">
-									<img src="images/chat.png" alt="Git Icon"/>
-								</div>
-								<div class="project-description">
-									<p><a href="https://chat-app-ver0.web.app/" target="_blank"><strong>Chat App:</strong></a>  Created a real-time chat application using the FERN stack (Firebase, Express, React, Node.js). Integrated Google OAuth for authentication and styled the frontend using Material UI and CSS. </p>
-								</div>
-							</div>
+			<button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+				<span></span><span></span><span></span>
+			</button>
+		</div>
 
+		<div class="mobile-menu" id="mobile-menu">
+			<a href="#about" data-nav>About</a>
+			<a href="#experience" data-nav>Experience</a>
+			<a href="#projects" data-nav>Projects</a>
+			<a href="#contact" data-nav>Contact</a>
+			<a href="assets/resume/Kevin_Zhu_Resume.pdf" target="_blank" rel="noopener">Resume</a>
+		</div>
+	</header>
 
-							<div class="project">
-								<div class="project-image">
-									<img src="images/ieee.php" alt="Git Icon"/>
-								</div>
-								<div class="project-description">
-									<p><a href="https://ieee.studentorg.berkeley.edu/" target="_blank"><strong>Berkeley IEEE Website:</strong></a> Refactored Berkeley IEEE student organization website from Ghost to a modern MERN stack framework, enhancing maintainability and future scalability. </p>
-								</div>
-							</div>
-							<button class="nav-right">></button>
-							
-						</article>
+	<main id="home">
 
-						<!-- About -->
-							<article id="about">
-								<button class="nav-left"><</button>
-								<h2 class="major">About</h2>
-								<span class="image main"><img src="images/kevin.jpg" alt="" /></span>
-								<p>Hi, I'm Kevin Zhu. Currently I am a student at UC Berkeley studying Electrial Engineering and Computer Science. I have expertise with Angular, React, Python, and Java. </p>
-								<p>I love learning new technologies and facing new problems.  I'm driven to understand the foundations of computing and to contribute to the field of technology through innovative solutions.</p>
-								<p><a href="https://drive.google.com/file/d/1yW2f3bpy0s5r-9Tp3CNe92gEsP4EM9z6/view?usp=sharing" target="_blank">Resume</a></p>
-							    <button class="nav-right">></button>
+		<!-- Hero -->
+		<section class="hero">
+			<div class="hero__inner">
+				<p class="hero__eyebrow reveal"><span class="pulse"></span>Available for new opportunities</p>
+				<h1 class="hero__name reveal">
+					Hi, I'm <span class="gradient-text">Kevin&nbsp;Zhu</span>
+				</h1>
+				<h2 class="hero__role reveal">
+					<span class="type-target" id="type-target"></span><span class="caret">|</span>
+				</h2>
+				<p class="hero__pitch reveal">
+					Software Engineer at <strong>Millennium&nbsp;Management</strong> building
+					resilient, secure infrastructure — from Kubernetes-backed services to the
+					automation that keeps thousands of applications running smoothly.
+				</p>
 
-							</article>
+				<div class="hero__actions reveal">
+					<a href="#projects" class="btn btn--primary">
+						View Projects <i class="fas fa-arrow-right"></i>
+					</a>
+					<a href="#contact" class="btn btn--ghost">Get in touch</a>
+				</div>
 
-						<!-- Contact -->
-							<article id="contact">
-
-								<button class="nav-left"><</button>
-
-								<h2 class="major">Contact</h2>
-								<span class="image main"><img src="images/bg3.jpg" alt="" /></span>
-								<h5>Email: </h5>
-								<p>Kevin-Zhu@Berkeley.edu</p>
-								<p>Feel free to message me or connect with me below. </p>
-								<!-- <form method="post" action="#">
-									<div class="fields">
-										<div class="field half">
-											<label for="name">Name</label>
-											<input type="text" name="name" id="name" />
-										</div>
-										<div class="field half">
-											<label for="email">Email</label>
-											<input type="text" name="email" id="email" />
-										</div>
-										<div class="field">
-											<label for="message">Message</label>
-											<textarea name="message" id="message" rows="4"></textarea>
-										</div>
-									</div>
-									<ul class="actions">
-										<li><input type="submit" value="Send Message" class="primary" /></li>
-										<li><input type="reset" value="Reset" /></li>
-									</ul>
-								</form> -->
-								<ul class="icons">
-									<!-- <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li> -->
-									<!-- <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li> -->
-									<li><a href="https://www.linkedin.com/in/kevinzzhu/" class="icon brands fa-linkedin" target="_blank"><span class="label">Linkedin</span></a></li>
-									<li><a href="https://github.com/KEV-INZHU" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
-								</ul>
-								<button class="nav-right">></button>
-
-							</article>
-
-						<!-- Elements -->
-							<article id="elements">
-								<h2 class="major">Elements</h2>
-
-								<section>
-									<h3 class="major">Text</h3>
-									<p>This is <b>bold</b> and this is <strong>strong</strong>. This is <i>italic</i> and this is <em>emphasized</em>.
-									This is <sup>superscript</sup> text and this is <sub>subscript</sub> text.
-									This is <u>underlined</u> and this is code: <code>for (;;) { ... }</code>. Finally, <a href="#">this is a link</a>.</p>
-									<hr />
-									<h2>Heading Level 2</h2>
-									<h3>Heading Level 3</h3>
-									<h4>Heading Level 4</h4>
-									<h5>Heading Level 5</h5>
-									<h6>Heading Level 6</h6>
-									<hr />
-									<h4>Blockquote</h4>
-									<blockquote>Fringilla nisl. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan faucibus. Vestibulum ante ipsum primis in faucibus lorem ipsum dolor sit amet nullam adipiscing eu felis.</blockquote>
-									<h4>Preformatted</h4>
-									<pre><code>i = 0;
-
-while (!deck.isInOrder()) {
-    print 'Iteration ' + i;
-    deck.shuffle();
-    i++;
-}
-
-print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
-								</section>
-
-								<section>
-									<h3 class="major">Lists</h3>
-
-									<h4>Unordered</h4>
-									<ul>
-										<li>Dolor pulvinar etiam.</li>
-										<li>Sagittis adipiscing.</li>
-										<li>Felis enim feugiat.</li>
-									</ul>
-
-									<h4>Alternate</h4>
-									<ul class="alt">
-										<li>Dolor pulvinar etiam.</li>
-										<li>Sagittis adipiscing.</li>
-										<li>Felis enim feugiat.</li>
-									</ul>
-
-									<h4>Ordered</h4>
-									<ol>
-										<li>Dolor pulvinar etiam.</li>
-										<li>Etiam vel felis viverra.</li>
-										<li>Felis enim feugiat.</li>
-										<li>Dolor pulvinar etiam.</li>
-										<li>Etiam vel felis lorem.</li>
-										<li>Felis enim et feugiat.</li>
-									</ol>
-									<h4>Icons</h4>
-									<ul class="icons">
-										<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-										<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-										<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-										<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
-									</ul>
-
-									<h4>Actions</h4>
-									<ul class="actions">
-										<li><a href="#" class="button primary">Default</a></li>
-										<li><a href="#" class="button">Default</a></li>
-									</ul>
-									<ul class="actions stacked">
-										<li><a href="#" class="button primary">Default</a></li>
-										<li><a href="#" class="button">Default</a></li>
-									</ul>
-								</section>
-
-								<section>
-									<h3 class="major">Table</h3>
-									<h4>Default</h4>
-									<div class="table-wrapper">
-										<table>
-											<thead>
-												<tr>
-													<th>Name</th>
-													<th>Description</th>
-													<th>Price</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>Item One</td>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td>29.99</td>
-												</tr>
-												<tr>
-													<td>Item Two</td>
-													<td>Vis ac commodo adipiscing arcu aliquet.</td>
-													<td>19.99</td>
-												</tr>
-												<tr>
-													<td>Item Three</td>
-													<td> Morbi faucibus arcu accumsan lorem.</td>
-													<td>29.99</td>
-												</tr>
-												<tr>
-													<td>Item Four</td>
-													<td>Vitae integer tempus condimentum.</td>
-													<td>19.99</td>
-												</tr>
-												<tr>
-													<td>Item Five</td>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td>29.99</td>
-												</tr>
-											</tbody>
-											<tfoot>
-												<tr>
-													<td colspan="2"></td>
-													<td>100.00</td>
-												</tr>
-											</tfoot>
-										</table>
-									</div>
-
-									<h4>Alternate</h4>
-									<div class="table-wrapper">
-										<table class="alt">
-											<thead>
-												<tr>
-													<th>Name</th>
-													<th>Description</th>
-													<th>Price</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>Item One</td>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td>29.99</td>
-												</tr>
-												<tr>
-													<td>Item Two</td>
-													<td>Vis ac commodo adipiscing arcu aliquet.</td>
-													<td>19.99</td>
-												</tr>
-												<tr>
-													<td>Item Three</td>
-													<td> Morbi faucibus arcu accumsan lorem.</td>
-													<td>29.99</td>
-												</tr>
-												<tr>
-													<td>Item Four</td>
-													<td>Vitae integer tempus condimentum.</td>
-													<td>19.99</td>
-												</tr>
-												<tr>
-													<td>Item Five</td>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td>29.99</td>
-												</tr>
-											</tbody>
-											<tfoot>
-												<tr>
-													<td colspan="2"></td>
-													<td>100.00</td>
-												</tr>
-											</tfoot>
-										</table>
-									</div>
-								</section>
-
-								<section>
-									<h3 class="major">Buttons</h3>
-									<ul class="actions">
-										<li><a href="#" class="button primary">Primary</a></li>
-										<li><a href="#" class="button">Default</a></li>
-									</ul>
-									<ul class="actions">
-										<li><a href="#" class="button">Default</a></li>
-										<li><a href="#" class="button small">Small</a></li>
-									</ul>
-									<ul class="actions">
-										<li><a href="#" class="button primary icon solid fa-download">Icon</a></li>
-										<li><a href="#" class="button icon solid fa-download">Icon</a></li>
-									</ul>
-									<ul class="actions">
-										<li><span class="button primary disabled">Disabled</span></li>
-										<li><span class="button disabled">Disabled</span></li>
-									</ul>
-								</section>
-
-								<section>
-									<h3 class="major">Form</h3>
-									<form method="post" action="#">
-										<div class="fields">
-											<div class="field half">
-												<label for="demo-name">Name</label>
-												<input type="text" name="demo-name" id="demo-name" value="" placeholder="Jane Doe" />
-											</div>
-											<div class="field half">
-												<label for="demo-email">Email</label>
-												<input type="email" name="demo-email" id="demo-email" value="" placeholder="jane@untitled.tld" />
-											</div>
-											<div class="field">
-												<label for="demo-category">Category</label>
-												<select name="demo-category" id="demo-category">
-													<option value="">-</option>
-													<option value="1">Manufacturing</option>
-													<option value="1">Shipping</option>
-													<option value="1">Administration</option>
-													<option value="1">Human Resources</option>
-												</select>
-											</div>
-											<div class="field half">
-												<input type="radio" id="demo-priority-low" name="demo-priority" checked>
-												<label for="demo-priority-low">Low</label>
-											</div>
-											<div class="field half">
-												<input type="radio" id="demo-priority-high" name="demo-priority">
-												<label for="demo-priority-high">High</label>
-											</div>
-											<div class="field half">
-												<input type="checkbox" id="demo-copy" name="demo-copy">
-												<label for="demo-copy">Email me a copy</label>
-											</div>
-											<div class="field half">
-												<input type="checkbox" id="demo-human" name="demo-human" checked>
-												<label for="demo-human">Not a robot</label>
-											</div>
-											<div class="field">
-												<label for="demo-message">Message</label>
-												<textarea name="demo-message" id="demo-message" placeholder="Enter your message" rows="6"></textarea>
-											</div>
-										</div>
-										<ul class="actions">
-											<li><input type="submit" value="Send Message" class="primary" /></li>
-											<li><input type="reset" value="Reset" /></li>
-										</ul>
-									</form>
-								</section>
-
-							</article>
-
-					</div>
-
-				<!-- Footer -->
-					<footer id="footer">
-					</footer>
-
+				<div class="hero__socials reveal">
+					<a href="https://github.com/KEV-INZHU" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+					<a href="https://www.linkedin.com/in/kevinzzhu/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+					<a href="mailto:zhukev12@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+				</div>
 			</div>
 
-		<!-- BG -->
-			<div id="bg"></div>
+			<a href="#about" class="scroll-cue" aria-label="Scroll to About">
+				<span>Scroll</span>
+				<i class="fas fa-chevron-down"></i>
+			</a>
+		</section>
 
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+		<!-- About -->
+		<section id="about" class="section about">
+			<div class="section__head reveal">
+				<span class="section__kicker">01 / About</span>
+				<h2 class="section__title">Who I am</h2>
+			</div>
 
-	</body>
+			<div class="about__grid">
+				<div class="about__portrait reveal">
+					<div class="portrait-frame">
+						<img src="images/kevin.jpg" alt="Portrait of Kevin Zhu" />
+					</div>
+					<div class="badge-card">
+						<i class="fas fa-graduation-cap"></i>
+						<div>
+							<strong>UC Berkeley</strong>
+							<span>EECS</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="about__content">
+					<p class="reveal">
+						I'm Kevin — a software engineer at <strong>Millennium&nbsp;Management</strong>
+						in New York, building identity and security infrastructure that scales
+						to thousands of applications. I graduated from UC&nbsp;Berkeley with a
+						B.S. in EECS, and I like taking systems from a rough idea to something
+						production-ready: designing for scale, instrumenting for observability,
+						and sweating the details that make it reliable.
+					</p>
+					<p class="reveal">
+						Outside of work I build things I'm curious about — most recently a
+						research pipeline that ingests financial filings and market data, and a
+						hybrid semantic search engine to make sense of it all. I like
+						understanding how systems work under the hood, from distributed
+						infrastructure to information retrieval.
+					</p>
+
+					<div class="skills reveal">
+						<div class="skills__group">
+							<h4>Languages</h4>
+							<ul class="pill-list">
+								<li>C#</li>
+								<li>Python</li>
+								<li>Java</li>
+								<li>SQL</li>
+								<li>JavaScript</li>
+							</ul>
+						</div>
+						<div class="skills__group">
+							<h4>Backend &amp; Infra</h4>
+							<ul class="pill-list">
+								<li>ASP.NET Core</li>
+								<li>REST API Design</li>
+								<li>Redis</li>
+								<li>Kubernetes</li>
+								<li>Docker</li>
+								<li>Azure</li>
+								<li>PKI / Keyfactor</li>
+								<li>PostgreSQL</li>
+								<li>FastAPI</li>
+							</ul>
+						</div>
+						<div class="skills__group">
+							<h4>CI/CD &amp; DevOps</h4>
+							<ul class="pill-list">
+								<li>GitHub Actions</li>
+								<li>Jenkins</li>
+								<li>ArgoCD</li>
+								<li>Artifactory</li>
+								<li>GitOps</li>
+							</ul>
+						</div>
+						<div class="skills__group">
+							<h4>Data &amp; ML</h4>
+							<ul class="pill-list">
+								<li>Hybrid / RAG Search</li>
+								<li>Local Embeddings (Ollama)</li>
+								<li>faster-whisper</li>
+								<li>XBRL Parsing</li>
+							</ul>
+						</div>
+						<div class="skills__group">
+							<h4>Web</h4>
+							<ul class="pill-list">
+								<li>React</li>
+								<li>Node.js</li>
+								<li>HTML / CSS</li>
+							</ul>
+						</div>
+						<div class="skills__group">
+							<h4>Observability</h4>
+							<ul class="pill-list">
+								<li>Datadog</li>
+								<li>Prometheus</li>
+								<li>OpenTelemetry</li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="about__meta reveal">
+						<div><i class="fas fa-map-marker-alt"></i> New York, United States</div>
+						<div><i class="fas fa-graduation-cap"></i> B.S. EECS, UC Berkeley — 2020–2024</div>
+						<a href="mailto:zhukev12@gmail.com"><i class="fas fa-envelope"></i> zhukev12@gmail.com</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Experience -->
+		<section id="experience" class="section experience">
+			<div class="section__head reveal">
+				<span class="section__kicker">02 / Experience</span>
+				<h2 class="section__title">Where I've worked</h2>
+			</div>
+
+			<ol class="timeline">
+				<li class="timeline__item reveal">
+					<div class="timeline__marker"></div>
+					<div class="timeline__card">
+						<span class="timeline__date">Jul 2024 — Present</span>
+						<h3>Software Engineer</h3>
+						<span class="timeline__org">Millennium Management</span>
+
+						<div class="timeline__subsection">
+							<h4>Self-Service Portal</h4>
+							<ul class="bullet-list">
+								<li>Engineered a horizontally scalable ASP.NET Core service — Redis-backed shared state, Kubernetes-based replication, and circuit-breaker/idempotency controls — instrumented with Prometheus, OpenTelemetry, and Datadog for production observability.</li>
+								<li>Built a production self-service platform unifying Microsoft Entra, PingFederate, Keyfactor PKI, Azure Key Vault, and ServiceNow, governing 9,140 applications and 1,105 certificates across 1,044 owners.</li>
+								<li>Containerized the service with Docker and built a GitOps release pipeline — GitHub Actions CI publishing images to Artifactory, deployed via ArgoCD.</li>
+							</ul>
+						</div>
+
+						<div class="timeline__subsection">
+							<h4>Information Security API</h4>
+							<ul class="bullet-list">
+								<li>Built and scaled InfosecAPI, the automation backbone behind ServiceNow-driven software, PKI certificate, and cloud-account requests, exposing a full CRUD plane over Azure applications.</li>
+								<li>Automated OAuth/SCIM provisioning across 350+ Snowflake, Datadog, and Sentry integrations via an idempotent endpoint with automatic retries and failure alerting.</li>
+								<li>Integrated Keycard for agentic identity management and built an MCP server for InfosecAPI, enabling authenticated LLM/agent access to internal identity automation.</li>
+							</ul>
+						</div>
+
+						<ul class="tag-list">
+							<li>ASP.NET Core</li>
+							<li>Kubernetes</li>
+							<li>Redis</li>
+							<li>Docker</li>
+							<li>Azure</li>
+							<li>GitOps</li>
+						</ul>
+					</div>
+				</li>
+
+				<li class="timeline__item reveal">
+					<div class="timeline__marker"></div>
+					<div class="timeline__card">
+						<span class="timeline__date">Jun 2023 — Aug 2023</span>
+						<h3>Software Engineer Intern</h3>
+						<span class="timeline__org">Millennium Management</span>
+						<ul class="bullet-list">
+							<li>Built an automated Keyfactor certificate-renewal workflow covering ~2,000 applications, eliminating recurring certificate-expiration outages.</li>
+							<li>Automated Azure AD application-expiration monitoring and owner alerting, replacing manual tracking.</li>
+							<li>Built a self-service privileged-access recertification dashboard, centralizing access reviews.</li>
+							<li>Automated security incident report generation, cutting manual reporting time in incident response.</li>
+						</ul>
+						<ul class="tag-list">
+							<li>Python</li>
+							<li>Azure AD</li>
+							<li>Automation</li>
+						</ul>
+					</div>
+				</li>
+			</ol>
+		</section>
+
+		<!-- Projects -->
+		<section id="projects" class="section projects">
+			<div class="section__head reveal">
+				<span class="section__kicker">03 / Projects</span>
+				<h2 class="section__title">Things I've built</h2>
+			</div>
+
+			<article class="project-featured reveal">
+				<div class="project-featured__body">
+					<span class="project-featured__kicker"><i class="fas fa-star"></i> Featured</span>
+					<h3>Semiconductor Supply-Chain Research Pipeline &amp; Local RAG Search</h3>
+					<p>
+						A resilient, multi-source financial research pipeline — pulling SEC
+						EDGAR XBRL filings, Yahoo Finance, Alpha Vantage, and FMP data — that
+						maintains full financial statements for 72 semiconductor supply-chain
+						companies (~184K financial facts, 37K daily price bars) with
+						retry/backoff, stale-lock detection, and unattended orchestration. On
+						top of it, a hybrid semantic search engine and a local GPU
+						speech-to-text pipeline for podcast sources with no published
+						transcript.
+					</p>
+
+					<ul class="bullet-list">
+						<li>Root-caused a ticker-tagging bug where 75.7% of 3,973 tagged mentions were false positives; rebuilt the matcher with cashtag/capitalization-aware evidence tiers, cutting mismatched tags to 1,832 while recovering 11 missed tickers — verified by a 30-test regression suite.</li>
+						<li>Designed a hybrid semantic search engine (local embeddings + Postgres full-text, fused via Reciprocal Rank Fusion) over ~27K chunked documents, raising recall@5 from 0.917 to 1.000 and MRR from 0.889 to 0.958 on a scored benchmark.</li>
+						<li>Deployed local GPU speech-to-text (faster-whisper, int8) at ~75x realtime, cutting a ~2,200-episode transcription backlog to 40–50 compute-hours via resumable runs.</li>
+					</ul>
+
+					<div class="stat-row">
+						<div class="stat-chip">
+							<strong>184K</strong>
+							<span>financial facts</span>
+						</div>
+						<div class="stat-chip">
+							<strong>27K</strong>
+							<span>docs indexed</span>
+						</div>
+						<div class="stat-chip">
+							<strong>1.000</strong>
+							<span>recall@5</span>
+						</div>
+						<div class="stat-chip">
+							<strong>~75x</strong>
+							<span>realtime STT</span>
+						</div>
+					</div>
+
+					<ul class="tag-list">
+						<li>Python</li>
+						<li>PostgreSQL</li>
+						<li>RAG / Hybrid Search</li>
+						<li>SEC EDGAR / XBRL</li>
+						<li>faster-whisper</li>
+					</ul>
+				</div>
+			</article>
+
+			<h3 class="projects__subhead reveal">Other Projects</h3>
+
+			<div class="project-grid">
+				<article class="project-card reveal">
+					<div class="project-card__media">
+						<img src="images/git.png" alt="Gitlet logo" loading="lazy" />
+					</div>
+					<div class="project-card__body">
+						<h3>Gitlet — Version Control System</h3>
+						<p>
+							A version control system built from scratch, supporting
+							branching, merging, and remotes — modeled after Git's core design.
+						</p>
+						<ul class="tag-list">
+							<li>Java</li>
+							<li>Data Structures</li>
+							<li>Systems Design</li>
+						</ul>
+						<a href="https://github.com/KEV-INZHU/Git" target="_blank" rel="noopener" class="project-card__link">
+							View on GitHub <i class="fas fa-external-link-alt"></i>
+						</a>
+					</div>
+				</article>
+
+				<article class="project-card reveal">
+					<div class="project-card__media">
+						<img src="images/chat.png" alt="Chat App icon" loading="lazy" />
+					</div>
+					<div class="project-card__body">
+						<h3>Real-Time Chat App</h3>
+						<p>
+							A real-time chat application built on the FERN stack (Firebase,
+							Express, React, Node.js) with Google OAuth authentication and a
+							Material UI interface.
+						</p>
+						<ul class="tag-list">
+							<li>React</li>
+							<li>Firebase</li>
+							<li>Node.js</li>
+						</ul>
+						<a href="https://chat-app-ver0.web.app/" target="_blank" rel="noopener" class="project-card__link">
+							View Live <i class="fas fa-external-link-alt"></i>
+						</a>
+					</div>
+				</article>
+
+				<article class="project-card reveal">
+					<div class="project-card__media">
+						<img src="images/ieee.png" alt="IEEE Berkeley logo" loading="lazy" />
+					</div>
+					<div class="project-card__body">
+						<h3>Berkeley IEEE Website</h3>
+						<p>
+							Refactored the Berkeley IEEE student organization site from Ghost
+							to a modern MERN stack, improving maintainability and setting up
+							the codebase for future scalability.
+						</p>
+						<ul class="tag-list">
+							<li>MongoDB</li>
+							<li>Express</li>
+							<li>React</li>
+						</ul>
+						<a href="https://ieee.studentorg.berkeley.edu/" target="_blank" rel="noopener" class="project-card__link">
+							View Live <i class="fas fa-external-link-alt"></i>
+						</a>
+					</div>
+				</article>
+			</div>
+		</section>
+
+		<!-- Contact -->
+		<section id="contact" class="section contact">
+			<div class="contact__card reveal">
+				<span class="section__kicker">04 / Contact</span>
+				<h2 class="section__title">Let's build something</h2>
+				<p>
+					I'm always happy to talk about new opportunities, interesting
+					problems, or just to connect. My inbox is open.
+				</p>
+
+				<a href="mailto:zhukev12@gmail.com" class="btn btn--primary btn--lg">
+					<i class="fas fa-envelope"></i> zhukev12@gmail.com
+				</a>
+
+				<div class="contact__socials">
+					<a href="https://github.com/KEV-INZHU" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i><span>GitHub</span></a>
+					<a href="https://www.linkedin.com/in/kevinzzhu/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i><span>LinkedIn</span></a>
+				</div>
+			</div>
+		</section>
+
+	</main>
+
+	<footer class="site-footer">
+		<p>&copy; <span id="year"></span> Kevin Zhu. Built from scratch, deployed on GitHub Pages.</p>
+		<a href="#home" class="back-to-top" aria-label="Back to top"><i class="fas fa-arrow-up"></i></a>
+	</footer>
+
+	<script src="assets/js/script.js"></script>
+</body>
 </html>
